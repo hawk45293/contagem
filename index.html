@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contagem Regressiva</title>
+
+<style>
+    body{
+        margin:0;
+        height:100vh;
+        background:#111;
+        color:white;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        font-family:Arial, sans-serif;
+        text-align:center;
+    }
+
+    #titulo{
+        font-size:48px;
+        margin-bottom:30px;
+    }
+
+    #subtitulo{
+        display:none;
+        font-size:36px;
+        margin-bottom:20px;
+        color:#00d1c7;
+    }
+
+    #contador{
+        font-size:72px;
+        font-weight:bold;
+        color:#ffffff;
+        margin-top:20px;
+    }
+
+    button{
+        font-size:28px;
+        padding:15px 40px;
+        border:none;
+        border-radius:10px;
+        background:#00d1c7;
+        color:#111;
+        font-weight:bold;
+        cursor:pointer;
+        transition:0.2s;
+    }
+
+    button:hover{
+        transform:scale(1.05);
+    }
+</style>
+</head>
+<body>
+
+<h1 id="titulo">APERTE PARA INICIAR</h1>
+
+<button id="iniciar">INICIAR</button>
+
+<h2 id="subtitulo">ROBERTA VOLTA EM:</h2>
+
+<div id="contador"></div>
+
+<script>
+const dataFinal = new Date("2026-07-23T08:00:00").getTime();
+
+let intervalo;
+let audioContext;
+
+function beep(freq=900, dur=0.05, vol=0.03){
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+
+    osc.frequency.value = freq;
+    gain.gain.value = vol;
+
+    osc.start();
+    osc.stop(audioContext.currentTime + dur);
+}
+
+document.getElementById("iniciar").onclick = function(){
+
+    this.style.display = "none";
+    document.getElementById("titulo").style.display = "none";
+    document.getElementById("subtitulo").style.display = "block";
+
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    function atualizar(){
+
+        const agora = Date.now();
+        const diferenca = dataFinal - agora;
+
+        if(diferenca <= 0){
+
+            clearInterval(intervalo);
+
+            document.getElementById("contador").innerHTML =
+                "ELE VOLTOU!";
+
+            // alarme final
+            for(let i=0;i<8;i++){
+                setTimeout(() => {
+                    beep(400,0.25,0.1);
+                }, i*350);
+            }
+
+            return;
+        }
+
+        // som dos segundos
+        beep();
+
+        const dias = Math.floor(diferenca/(1000*60*60*24));
+        const horas = Math.floor((diferenca%(1000*60*60*24))/(1000*60*60));
+        const minutos = Math.floor((diferenca%(1000*60*60))/(1000*60));
+        const segundos = Math.floor((diferenca%(1000*60))/1000);
+
+        document.getElementById("contador").innerHTML =
+            `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+    }
+
+    atualizar();
+    intervalo = setInterval(atualizar,1000);
+};
+</script>
+
+</body>
+</html>
