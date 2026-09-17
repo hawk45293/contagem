@@ -61,12 +61,12 @@
 
 <button id="iniciar">INICIAR</button>
 
-<h2 id="subtitulo">ROBERTA VOLTA EM:</h2>
+<h2 id="subtitulo">Confraternização em:</h2>
 
 <div id="contador"></div>
 
 <script>
-const dataFinal = new Date("2026-07-23T08:00:00").getTime();
+const dataFinal = new Date("2026-12-23T10:00:00").getTime();
 
 let intervalo;
 let audioContext;
@@ -103,7 +103,7 @@ document.getElementById("iniciar").onclick = function(){
             clearInterval(intervalo);
 
             document.getElementById("contador").innerHTML =
-                "ELE VOLTOU!";
+                "BORA BEBER!";
 
             // alarme final
             for(let i=0;i<8;i++){
